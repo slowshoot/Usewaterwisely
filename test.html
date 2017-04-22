@@ -1,6 +1,8 @@
 <!-- The header of HTML page to use the Java script -->
 <script src="js/jquery.min.js"></script>
 <script src="js/echarts.common.min.js"></script>
+<script src="js/d3.v4.js" language="JavaScript"></script>
+<script src="js/liquidFillGauge.js" language="JavaScript"></script>
 <script src="js/bootstrap3-typeahead.min.js"></script>
 <!-- The link to mention the css style of the website -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -34,29 +36,29 @@
 				<div class="form-group">
 					<div class="col-md-4" style="background: #37bec9;padding-bottom: 15px;font-size: 12px;">
 						<h4>Know about the water resources for your residence</h4>
-						<label style="margin-top: 5px;">Type in your suburb name or post code</label>
+						<label style="margin-top: 5px;">Type in your suburb name or post code. <a href="#" onclick="getpostCode()" style="text-decoration: underline;"><font color="#1f2d53">Get Post Code</font></a></label>
 						<div class="form-inline">
 							<div class="input-group" style="float:left">
-								<input type="text" id="localization" class="form-control" placeholder="suburb name" onchange="localizationChange()">
+								<input type="text" id="localization" class="form-control" placeholder="suburb name" onchange="">
 							</div>
 							<div class="input-group" style="float:left; width:100px; margin-left:10px">
 								<input type="text" id="postCode" class="form-control" placeholder="post code">
 							</div>
 						</div>
-						<label style="margin-top: 5px;">Type in your tank capacity</label>
+						<label style="margin-top: 5px;">Type in your tank capacity</label><br>
+						<input type="radio" name="radio1" onclick="addTank()" checked/><span>I have tank, please type in your tank size</span><br>
 						<div class="input-group">
 							<input type="text" id="waterLitre" class="form-control">
 							<div class="input-group-addon">Litres</div>
 						</div>
-						<input type="radio" name="radio1" onclick="addTank()" checked/><span>I have tank, please type in your tank size</span><br>
 						<input type="radio" name="radio1" onclick="removeTank()" /><span>no tank, tank size is zero</span>
 						<button type="button" class="btn btn-default btn-primary" onClick="notank(this);" style="margin-top:10px; display:none">No tank</button><br>
-						<label style="margin-top: 5px;">Type in your roof area (default: 50)</label>
+						<label style="margin-top: 5px;">Type in your roof area (default: 50)</label><br>
+						<input type="radio" name="radio2" onclick="addRoof()" checked/><span>I know my roof area, please type in your roof area</span><br>
 						<div class="input-group">
 							<input type="text" id="area" class="form-control">
 							<div class="input-group-addon">m&sup2; </div>
 						</div>
-						<input type="radio" name="radio2" onclick="addRoof()" checked/><span>I know my roof area, please type in your roof area</span><br>
 						<input type="radio" name="radio2" onclick="removeRoof()" /><span>Calculate the roof area now</span>						
 						<button type="button" class="btn btn-default btn-primary" onClick="noRoof(this);" style="margin-top:10px;display:none">Do not know Roof Area</button><br>
 						<br>
@@ -87,20 +89,40 @@
 	toMain();
 
 	var nameList = [
-'ANNUELLO',  
-'ANNUELLO(MOSTANK)',
-'BANNERTON' ,
-'BARING(KINTA)',
-'BENETOOK NORTH' ,
-'CARWARP',  
-'CHINKAPOOK' ,
-'COLIGNAN',  
-'COWANGIE'  ,
-'CRAMENTON'
-];
+'Melbourne','East Melbourne','West Melbourne','Melbourne','St Kilda Road Central','Melbourne','South Wharf','Southbank','Docklands','University Of Melbourne','Footscray','Seddon West','Seddon','Flemington','Kensington','Hotham Hill','North Melbourne','Melbourne University','Carlton','Carlton South','Carlton North','Princes Hill','Fitzroy','Abbotsford','Clifton Hill','Fitzroy North','St Kilda','St Kilda West','St Kilda South','Balaclava','St Kilda East','Brighton Road','Elwood','South Melbourne','Albert Park','Middle Park','Garden City','Port Melbourne','Brooklyn','Maidstone','Kingsville','Tottenham','Kingsville West','West Footscray','Yarraville','Yarraville West','Braybrook','Robinson','Braybrook North','Albion','Sunshine North','Glengala','Sunshine West','Sunshine','Albanvale','Kings Park','Kealba','St Albans','Ardeer','Deer Park East','Burnside','Deer Park ','Burnside Heights','Deer Park North','Cairnlea','Ravenhall','Caroline Springs','Ascot Vale','Maribyrnong','Highpoint City','Travancore','Keilor East','Avondale Heights','Keilor','Keilor North','Calder Park','Sydenham','Delahey','Taylors Hill','Hillside','Keilor Downs','Taylors Lakes','Keilor Lodge','Watergardens','Greenvale','Oaklands Junction','Yuroke','Plumpton','Rockbank','Kurunjang','Melton West','Melton','Toolern Vale','Brookfield','Eynesbury','Exford','Melton South','Diggers Rest','Bulla','Sunbury','Wildwood','Newport','Spotwood','South Kingsville','Williamstown','Williamstown North','Altona','Seaholme','Mambourin','Wyndham Vale','Mount Cottrell','Altona East','Altona North','Altona Gate','Laverton North','Williams Landing','Altona Meadows','Seabrook','Laverton','Hoppers Crossing','Truganina','Tarneit','Cocoroc','Quandong','Derrimut','Werribee','Point Cook','Werribee South','Little River','Moonee Ponds','Aberfeldie','Essendon West','Essendon','Essendon Fields','Strathmore','Essendon North','Strathmore Heights','Airport West','Niddrie','Keilor Park','Gladstone Park','Tullamarine','Gowanbrae','Pascoe Vale','Pascoe Vale South','Glenroy','Oak Park','Hadfield','Broadmeadows','Jacana','Dallas','Coolaroo','Meadow Heights','Attwood','Westmeadows','Brunswick South','Moonee Vale','Brunswick West','Moreland West','Brunswick','Brunswick North','Brunswick Lower','Brunswick East','Sumner','Batman','Merlynston','Coburg','Moreland','Coburg North','Fawkner','Campbellfield','Somerton','Craigieburn','Mickleham','Donnybrook','Roxburgh Park','Kalkallo','Northcote','Northcote South','Thornbury','Gilberton','Preston South','Northland Centre','Preston West','Preston','Regent West','Preston Lower','Reservoir','Thomastown','Lalor','Epping','Alphington','Fairfield','Ivanhoe','Ivanhoe North','Ivanhoe East','Bellfield','Heidelberg Rgh','Heidelberg Heights','Heidelberg West','Mill Park','Bundoora','La Trobe University','Kingsbury','Banyule','Rosanna','Eaglemont','Viewbank','Heidelberg','Macleod','Yallambie','Macleod West','Macleod','Briar Hill','St Helena','Greensborough','Diamond Creek','Plenty','Yarrambat','Lower Plenty','Montmorency','Eltham','Resarch','Eltham North','Wattle Glen','Arthurs Creek','Nutfield','Cottles Bridge','Strathewen','Hurstbrdge','Wollert','Woodstock','South Morang','Beveridge','Yan Yean','Eden Park','Kinglake West','Humevale','Pheasant Creek','Kinglake Central','Whittlesea','Bend Of Islands','Watsons Creek','Kangaroo Ground','Donvale','North Warrandyte','Warrandyte','Park Orchards','Wonga Park','Chirnside Park','Brentford Square','Nunawading','Forest Hill','Mitcham','Rangeview','Mitcham North','Vermont','Vermont South','Heathwood','Warrandyte South','Ringwood','Warranwood','Ringwood North','Bedford Road','Ringwood East','Heathmont','Croydon','Croydon North','Croydon Hills','Croydon South','Kilsyth','Kilsyth South','Mooroolbark','Beenak','Seville East','Don Valley','Wandin East','Hoddles Creek','Wandin North','Launching Place','Woori Yallock','Seville ','Yellingbo','Lilydale','Brandon Park','Wheelers Hill','Glen Waverley','Burwood East','Burwood Heights','Knox City Centre','Wantirna','Studfield','Wantirna South','Bayswater','Bayswater North','The Basin','Boronia','Ferntree Gully','Mountain Gate','Lysterfield','Upper Ferntree Gully','Lysterfield South','Upwey','Menzies Creek','Selby','Belgrave','Belgrave South','Belgrave Heights','Tecoma','Rowville','Scoresby','Knoxfield','Panton Hill','Smiths Gully','St Andrews','Kinglake','Montrose','Kalorama','Mount Dandenong','Coldstream','Yering','Gruyere','Christmas Hills','Tarrawarra','Dixons Creek','Yarra Glen','Steels Creek','Badger Creek','Healesville Main Street','Castella','Healesville Post Shop','Chum Creek','Mount Toolebewong','Healesville','Toolangi','Tremont','Ferny Creek','Sassafras','Sassafras Gully','Olinda','Sherbrooke','Kallista','The Patch','Monbulk','Silvan','Mount Evelyn','Gilderoy','Three Bridges','Gladysdale','Yarra Junction','Powelltown','Narre Warren East','Narre Warren North','Cotham','Kew','Kew East','Balwyn','Deepdene','Balwyn East','Balwyn North','Greythorn','Bulleen','Templestowe','Templestowe Lower','Doncaster','Doncaster East','The Pines','Doncaster Heights','Burnley','Richmond East','Burnley North','Richmond North','Cremorne','Richmond South','Richmond','Auburn South','Hawthorn North','Glenferrie South','Hawthorn West','Hawthorn','Auburn','Hawthorn East','Camberwell','Camberwell West','Camberwell North','Hartwell','Camberwell South','Middle Camberwell','Camberwell East','Canterbury','Box Hill','Houston','Box Hill Central','Wattle Park','Box Hill South','Box Hill North','Mont Albert North','Kerrimuir','Blackburn','Blackburn South','Blackburn North','Laburnum','South Yarra','Hawksburn','Toorak','Armadale','Armadale North','Kooyong','Malvern North','Malvern','Caulfield East','Darling South','Central Park','Malvern East','Darling','Wattletree Road Po','Caulfield Junction','Caulfield North','Prahran','Windsor','Prahran East','Caulfield','Hopetoun Gardens','Caulfield South','Glen Huntly','Carnegie','Murrumbeena','Bentleigh East','Hughesdale','Oakleigh South','Clayton','Notting Hill','Clarinda','Clayton South','Dingley Village','Springvale South','Keysborough','Elsternwick','Ripponlea','Gardenvale','Brighton','Dendy','Brighton North','Were Street Po','Brighton East','North Road','Hampton','Hampton North','Hampton East','Moorabbin','Wishart','Moorabbin East','Highett','Sandringham','Cheltenham','Southland Centre','Chetenham East','Beaumaris','Black Rock North','Black Rock','Cromer','Mentone','Moorabbin Airport','Mentone East','Aspendale','Mordialloc','Aspendale Gardens','Parkdale','Braeside','Waterways','Bonbeach','Chelsea Heights','Chelsea','Edithvale','Carrum','Patterson Lakes','Heatherton','Bentleigh','Ormond','Mckinnon','Patterson','Monash University','Mulgrave','Waverley Gardens','Sandown Village','Springvale','Noble Park','Noble Park North','Bangholme','Dandenong North','Dandenong','Dandenong South','Dandenong East','Dunearn','Doveton','Eumemmerring','Cockatoo','Nangana','Mount Burnett','Avonsleigh','Emerald','Clematis','Macclesfield','Gembrook','Endeavour Hills','Hallam','Fountain Gate','Narre Warren South','Narre Warren','Berwick','Harkaway','Beaconsfield','Guys Hill','Beaconsfield Upper','Dewhurst','Officer','Officer South','Pakenham','Pakenham Upper','Pakenham South','Rythdale','Maryknoll','Nar Nar Goon North','Nar Nar Goon','Tynong','Tynong North','Cora Lynn','Garfield North','Garfield','Vervale','Bunyip','Iona','Bunyip North','Tonimbuk','Lynbrook','Lyndhurst','Hampton Park','Botanic Ridge','Cranbourne West','Cannons Creek','Devon Meadows','Cranbourne','Junction Village','Cranbourne East','Sandhurst','Cranbourne North','Skye','Cranbourne South','Cardinia','Clyde North','Clyde','Blind Bight','Warneet','Tooradin','Bayles','Koo Wee Rup','Catani','Koo Wee Rup North','Dalmore','Yannathan','Heath Hill'];
 	$("#localization").typeahead({
 		source: nameList
 	});
+	
+function getpostCode()
+{	
+	$.ajax({
+        type: "POST",
+        url: "http://localhost:8000/api/searchlocation",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(GetJsonData()),
+        dataType: "json",
+        //jsonpCallback: "jsonpcallback",
+        async: false,
+        success: function(data)
+		{
+			if(data.locations == null || attributeCount(data.locations) == 0)
+					alert("Warning: Please input valid suburb name");
+			else
+			{
+				for (var y in data.locations)
+				{
+					var id = data.locations[y];
+					$("#postCode").val(id);
+					return false;
+				}
+			}
+		},
+        error: function (message) {
+        	alert("error.");
+        }
+    });
+}
 function localizationChange()
 {
 	var loc = $("#localization").val();
@@ -120,6 +142,19 @@ function localizationChange()
         }
     });
 }
+function attributeCount(obj) {
+    var count = 0;
+    for(var i in obj) {
+        if(obj.hasOwnProperty(i)) 
+        {
+            count++;
+        }
+    }
+    return count;
+}
+var allText;
+var allTanks;
+var gauge
 function submitAPI()
 {
 	$("#localization").blur();
@@ -147,7 +182,7 @@ function submitAPI()
 		alert("Warning: The maximum tank capacity is 260000, please check!");
 		return false;
 	}
-	if ($("#area").val() != '' && $("#area").val() != null && $("#area").val() > 1000)
+	if ($("#area").val() != '' && $("#area").val() != null && $("#area").val() > 10000)
 	{
 		alert("Warning: The maximum roof area is 1000 square meter");
 		return false;
@@ -167,13 +202,17 @@ function submitAPI()
 		alert("Warning: Please input only numbers")
 		return false;	
 	}
+	var tankvalue =$("#waterLitre").val();
+	
 	$("#mainText").html("");
 	$("#mainText").append('<a href="mailto:goodboy888666@gmail.com"><button type="button" class="btn btn-default btn-info" id="tomail" style="border-radius: 0px;float:right;margin-top: 25px;">FAQ</button></a>');
-	$("#mainText").append('<button type="button" class="btn btn-default" id="toCost" onClick="toCost();" style="border-radius: 0px;float:right;margin-top: 25px;">Cost Analysis</button>');
-	$("#mainText").append('<button type="button" class="btn btn-default btn-primary" id="toMain" onClick="toMain();" style="border-radius: 0px;float:right;margin-top: 25px;">Run-off Estimation</button>');
-	$("#mainText").append('<label style="margin-top: 5px;" class="rainfall">This chart gives an estimate of your tank level based on the average rainfall in your location and your roof area.</label>');
-	$("#mainText").append('<label style="margin-top: 5px;" class="costchat">This chart gives a comparison of cost when you buy the same amount of run-off water from a water provider. Different metropolitan water providers are shown here. </label>');
-	
+	if(tankvalue != '')
+	{
+		$("#mainText").append('<button type="button" class="btn btn-default" id="toCost" onClick="toCost();" style="border-radius: 0px;float:right;margin-top: 25px;">Cost Analysis</button>');
+		$("#mainText").append('<button type="button" class="btn btn-default btn-primary" id="toMain" onClick="toMain();" style="border-radius: 0px;float:right;margin-top: 25px;">Run-off Estimation</button>');
+		$("#mainText").append('<label style="margin-top: 5px;" class="rainfall">This chart gives an estimate of your tank level based on the average rainfall in your location and your roof area.</label>');
+		$("#mainText").append('<label style="margin-top: 5px;" class="costchat">This chart gives a comparison of cost when you buy the same amount of run-off water from a water provider. Different metropolitan water providers are shown here. </label>');
+	}
 	var jsondata = null;
     $.ajax({
         type: "POST",
@@ -185,184 +224,381 @@ function submitAPI()
         async: false,
         success: function(data)
 		{
-			if(data.locations == null || data.locations.length == 0)
+			if(data.locations == null || attributeCount(data.locations) == 0)
 					alert("Warning: Please input valid suburb name");
 			else
 				jsondata = data.locations;
 		},
         error: function (message) {
-        	alert(message);
+        	alert("error.");
         }
     });
-	if (jsondata == null || jsondata.length == 0)
+	if (jsondata == null)
 			return false;
-	var nameList = new Array(jsondata.length);
-	var numList = new Array(jsondata.length);
-	for (var i = 0; i < jsondata.length; i++)
+	var nameList = new Array(attributeCount(jsondata));
+	var numList = new Array(attributeCount(jsondata));
+	var cont = 0;
+	for (var x in jsondata)
 	{
-		nameList[i] = (jsondata[i].station_name);
+		nameList[cont] = x;
+		cont++;
 	}
+	cont = 0;
 	var countNum = 0;
-	for (var j = 0; j < jsondata.length; j++)
+	for (var y in jsondata)
 	{
-		var id = (jsondata[j].station_id);
+		var id = jsondata[y];
 		var htmlContent = null;
-		$.ajax({
-			type: "POST",
-			url: "http://localhost:8000/api/getrunoffamount",
-			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify(getJsonDate2(id)),
-			dataType: "json",
-			//jsonpCallback: "jsonpcallback",
-			async: false,
-			success: function(data)
-			{
-				var text = data;
-				if( text[0] == null)
-					return false;
-				var rainfall = new Array();
-				var runoff = new Array();
-				var cost = new Array();
-				var cost2 = new Array();
-				var cost3 = new Array();
-				var cost4 = new Array();
-				var tanklat = $("#waterLitre").val();
-				if (tanklat == '' || tanklat == null)
-					tanklat = 0;
-				var tanks = [tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat,tanklat];
-				var roofArea = $("#area").val();
-				if (roofArea == '')
-					roofArea = 50;
-                if (text[0] != null){ rainfall[0] = text[0].rainfall; runoff[0] = text[0].runoff;cost[0] = runoff[0]*2.3932/1000;
-                    cost2[0] = runoff[0]*2.5993/1000;cost3[0] = runoff[0]*2.6097/1000;cost4[0]=runoff[0]*1.7058/1000;}
-                if (text[1] != null){ rainfall[1] = text[1].rainfall; runoff[1] = text[1].runoff;cost[1] = runoff[1]*2.3932/1000;
-                    cost2[1] = runoff[1]*2.5993/1000;cost3[1] = runoff[1]*2.6097/1000;cost4[1]=runoff[1]*1.7058/1000;}
-                if (text[2] != null){ rainfall[2] = text[2].rainfall; runoff[2] = text[2].runoff;cost[2] = runoff[2]*2.3932/1000;
-                    cost2[2] = runoff[2]*2.5993/1000;cost3[2] = runoff[2]*2.6097/1000;cost4[2]=runoff[2]*1.7058/1000;}
-                if (text[3] != null){ rainfall[3] = text[3].rainfall; runoff[3] = text[3].runoff;cost[3] = runoff[3]*2.3932/1000;
-                    cost2[3] = runoff[3]*2.5993/1000;cost3[3] = runoff[3]*2.6097/1000;cost4[3]=runoff[3]*1.7058/1000;}
-                if (text[4] != null){ rainfall[4] = text[4].rainfall; runoff[4] = text[4].runoff;cost[4] = runoff[4]*2.3932/1000;
-                    cost2[4] = runoff[4]*2.5993/1000;cost3[4] = runoff[4]*2.6097/1000;cost4[4]=runoff[4]*1.7058/1000;}
-                if (text[5] != null){ rainfall[5] = text[5].rainfall; runoff[5] = text[5].runoff;cost[5] = runoff[5]*2.3932/1000;
-                    cost2[5] = runoff[5]*2.5993/1000;cost3[5] = runoff[5]*2.6097/1000;cost4[5]=runoff[5]*1.7058/1000;}
-                if (text[6] != null){ rainfall[6] = text[6].rainfall; runoff[6] = text[6].runoff;cost[6] = runoff[6]*2.3932/1000;
-                    cost2[6] = runoff[6]*2.5993/1000;cost3[6] = runoff[6]*2.6097/1000;cost4[6]=runoff[6]*1.7058/1000;}
-                if (text[7] != null){ rainfall[7] = text[7].rainfall; runoff[7] = text[7].runoff;cost[7] = runoff[7]*2.3932/1000;
-                    cost2[7] = runoff[7]*2.5993/1000;cost3[7] = runoff[7]*2.6097/1000;cost4[7]=runoff[7]*1.7058/1000;}
-                if (text[8] != null){ rainfall[8] = text[8].rainfall; runoff[8] = text[8].runoff;cost[8] = runoff[8]*2.3932/1000;
-                    cost2[8] = runoff[8]*2.5993/1000;cost3[8] = runoff[8]*2.6097/1000;cost4[8]=runoff[8]*1.7058/1000;}
-                if (text[9] != null){ rainfall[9] = text[9].rainfall; runoff[9] = text[9].runoff;cost[9] = runoff[9]*2.3932/1000;
-                    cost2[9] = runoff[9]*2.5993/1000;cost3[9] = runoff[9]*2.6097/1000;cost4[9]=runoff[9]*1.7058/1000;}
-                if (text[10] != null){ rainfall[10] = text[10].rainfall; runoff[10] = text[10].runoff;cost[10] = runoff[10]*2.3932/1000;
-                    cost2[10] = runoff[10]*2.5993/1000;cost3[10] = runoff[10]*2.6097/1000;cost4[10]=runoff[10]*1.7058/1000;}
-                if (text[11] != null){ rainfall[11] = text[11].rainfall; runoff[11] = text[11].runoff;cost[11] = runoff[11]*2.3932/1000;
-                    cost2[11] = runoff[11]*2.5993/1000;cost3[11] = runoff[11]*2.6097/1000;cost4[11]=runoff[11]*1.7058/1000;}
-				$("#mainText").append('<div id="main_'+countNum+'" class="rainfall" style="height:450px;"></div>');
-				$("#mainText").append('<div id="lain_'+countNum+'" class="costchat" style="height:450px;"></div>');
-				var chart = echarts.init(document.getElementById('main_' + countNum));
-				var chart2 = echarts.init(document.getElementById('lain_' + countNum));
-				countNum++;
-				var options = {
-					color: ['#1f2d53','#3398DB','#EA2F10'],
-					title: {
-						text: 'Rainfall run-off chart -' +  nameList[j],
-						textStyle: {fontSize:12}
-					},
-					tooltip: {},
-					legend: {
-						right: 10,
-						data:['rainfall','runoff','tank capacity']
-					},
-
-					xAxis: {
-						name:'Month',
-						data: ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
-					},
-					yAxis: {name:'Litres'},
-					series: [{
-						name: 'rainfall',
-						type: 'bar',
-						data: rainfall
-					},{
-						name: 'runoff',
-						type: 'bar',
-						data: runoff
-					}, {
-						name:'tank capacity',
-						type: 'line',
-						data: tanks
+		var tanklat = $("#waterLitre").val();
+		if (tanklat != '')
+		{
+			$.ajax({
+				type: "POST",
+				url: "http://localhost:8000/api/getwaterlevels",
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(getJsonDate2(id, y)),
+				dataType: "json",
+				//jsonpCallback: "jsonpcallback",
+				async: false,
+				success: function(data)
+				{
+					var text = data;
+					allText = data;
+					if( text[0] == null)
+						return false;
+					var rainfall = new Array();
+					var runoff = new Array();
+					var cost = new Array();
+					var cost2 = new Array();
+					var cost3 = new Array();
+					var cost4 = new Array();
+					var tanklat = $("#waterLitre").val();
+					if (tanklat == '' || tanklat == null)
+						tanklat = 0;
+					var tanks = [tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat, tanklat,tanklat];
+					var roofArea = $("#area").val();
+					if (roofArea == '')
+						roofArea = 50;
+	                if (text[0] != null){
+	                	cost[0] = text[0].volume*2.3932/1000;
+	                    cost2[0] = text[0].volume*2.5993/1000;cost3[0] = text[0].volume*2.6097/1000;cost4[0]=text[0].volume*1.7058/1000;}
+	                if (text[1] != null){
+	                	cost[1] = text[1].volume*2.3932/1000;
+	                    cost2[1] = text[1].volume*2.5993/1000;cost3[1] = text[1].volume*2.6097/1000;cost4[1]=text[1].volume*1.7058/1000;}
+	                if (text[2] != null){
+	                	cost[2] = text[2].volume*2.3932/1000;
+	                    cost2[2] = text[2].volume*2.5993/1000;cost3[2] = text[2].volume*2.6097/1000;cost4[2]=text[2].volume*1.7058/1000;}
+	                if (text[3] != null){
+	                	cost[3] = text[3].volume*2.3932/1000;
+	                    cost2[3] = text[3].volume*2.5993/1000;cost3[3] = text[3].volume*2.6097/1000;cost4[3]=text[3].volume*1.7058/1000;}
+	                if (text[4] != null){
+	                	cost[4] = text[4].volume*2.3932/1000;
+	                    cost2[4] = text[4].volume*2.5993/1000;cost3[4] = text[4].volume*2.6097/1000;cost4[4]=text[4].volume*1.7058/1000;}
+	                if (text[5] != null){ 
+	                	cost[5] = text[5].volume*2.3932/1000;
+	                    cost2[5] = text[5].volume*2.5993/1000;cost3[5] = text[5].volume*2.6097/1000;cost4[5]=text[5].volume*1.7058/1000;}
+	                if (text[6] != null){
+	                	cost[6] = text[6].volume*2.3932/1000;
+	                    cost2[6] = text[6].volume*2.5993/1000;cost3[6] = text[6].volume*2.6097/1000;cost4[6]=text[6].volume*1.7058/1000;}
+	                if (text[7] != null){
+	                	cost[7] = text[7].volume*2.3932/1000;
+	                    cost2[7] = text[7].volume*2.5993/1000;cost3[7] = text[7].volume*2.6097/1000;cost4[7]=text[7].volume*1.7058/1000;}
+	                if (text[8] != null){
+	                	cost[8] = text[8].volume*2.3932/1000;
+	                    cost2[8] = text[8].volume*2.5993/1000;cost3[8] = text[8].volume*2.6097/1000;cost4[8]=text[8].volume*1.7058/1000;}
+	                if (text[9] != null){
+	                	cost[9] = text[9].volume*2.3932/1000;
+	                    cost2[9] = text[9].volume*2.5993/1000;cost3[9] = text[9].volume*2.6097/1000;cost4[9]=text[9].volume*1.7058/1000;}
+	                if (text[10] != null){
+	                	cost[10] = text[10].volume*2.3932/1000;
+	                    cost2[10] = text[10].volume*2.5993/1000;cost3[10] = text[10].volume*2.6097/1000;cost4[10]=text[10].volume*1.7058/1000;}
+	                if (text[11] != null){
+	                	cost[11] = text[11].volume*2.3932/1000;
+	                    cost2[11] = text[11].volume*2.5993/1000;cost3[11] = text[11].volume*2.6097/1000;cost4[11]=text[11].volume*1.7058/1000;}
+					$("#mainText").append('<div id="main_'+countNum+'" class="rainfall" style="height:450px;"></div>');
+					$("#mainText").append('<div id="lain_'+countNum+'" class="costchat" style="height:450px;"></div>');
+					var chart2 = echarts.init(document.getElementById('lain_' + countNum));
+					//op1
+					$("#main_"+countNum).append('<svg id="fillgauge'+countNum+'" width="30%" height="150" style="float: left;"></svg>');
+					$("#main_"+countNum).append('<div id="inTge" style="float:left;border:1px solid blue;width:250px;height:150px"></div>');
+					$("#inTge").append('<div id="volumeTag" style="margin-top: 30px;margin-left: 15px;">overflow:</div><br>');
+					$("#inTge").append('<div id="deficitTag" style="margin-left: 15px;">deficit:</div>');
+					$("#main_"+countNum).append('<br><div id="buttonList" style="margin-top: 200px;margin-left: 40px;"></div>');
+					for (var is = 0; is < 12; is++)
+					{
+						$("#buttonList").append('<button class="btn btn-default btn-primary" type="button" style="margin-left: 10px;" onclick="changeMonth('+is+')">'+(is+1)+'</button>');
 					}
-					]
-				};
-				var options2 = {
-					color: ['#1f2d53','#3398DB','#43AC6A','#EA2F10'],
-					title: {
-						text: 'Cost chart\n -' +  nameList[j],
-						textStyle: {fontSize:12}
-					},
-					tooltip: {},
-					legend: {
-						right: 20,
+					var config = liquidFillGaugeDefaultSettings();
+				    config.waveHeight = 0.3;
+				    config.circleThickness = 0.1;
+				    config.circleFillGap = 0.2;
+				    config.textVertPosition = 0.8;
+				    config.waveAnimateTime = 2000;
+				    config.waveCount = 1;
+				    config.displayPercent = false;
+				    config.maxValue = tanklat;
+					gauge = loadLiquidFillGauge("fillgauge" + countNum, 28, config);
+					gauge.update(text[0].volume);
+					
+					countNum++;
+					//op2
+					var options2 = {
+						color: ['#1f2d53','#3398DB','#43AC6A','#EA2F10'],
+						title: {
+							text: 'Cost chart\n -' +  nameList[cont],
+							textStyle: {fontSize:12}
+						},
+						tooltip: {},
+						legend: {
+							right: 20,
 
-						data:['City West Water', 'Yarra Valley Water', 'South East Water', 'Western Water']
-					},
-                    grid: { // control the size of charts
-                        x: 100,
-                        y:100,
-                        x2: 100,
-                        y2: 100,
-                    },
-					xAxis: {
-						name:'Month',
-						data: ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
-					},
-					yAxis: {name:'Dolars'},
-					series: [{
-						name: 'City West Water',
-						type: 'bar',
-						data: cost
-					},
-						{
-							name: 'Yarra Valley Water',
-							type: 'bar',
-							data: cost2
+							data:['City West Water', 'Yarra Valley Water', 'South East Water', 'Western Water']
 						},
-						{
-							name: 'South East Water',
-							type: 'bar',
-							data: cost3
+	                    grid: { // control the size of charts
+	                        x: 100,
+	                        y:100,
+	                        x2: 100,
+	                        y2: 100,
+	                    },
+						xAxis: {
+							name:'Month',
+							data: ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
 						},
-						{
-							name: 'Western Water',
+						yAxis: {name:'Dolars'},
+						series: [{
+							name: 'City West Water',
 							type: 'bar',
-							data: cost4
+							data: cost
+						},
+							{
+								name: 'Yarra Valley Water',
+								type: 'bar',
+								data: cost2
+							},
+							{
+								name: 'South East Water',
+								type: 'bar',
+								data: cost3
+							},
+							{
+								name: 'Western Water',
+								type: 'bar',
+								data: cost4
+							}
+						]
+					};
+					chart2.setOption(options2);
+					
+					//op3
+					$.ajax({
+						type: "POST",
+						url: "http://localhost:8000/api/gettanksize",
+						contentType: "application/json; charset=utf-8",
+						data: JSON.stringify(gettanksize(id, y)),
+						dataType: "json",
+						//jsonpCallback: "jsonpcallback",
+						async: false,
+						success: function(data)
+						{
+							var jsonStr = data;
+							allTanks = data;
+							
+							var peopelNum = $("#peopelNum").val();
+							if (peopelNum == '')
+								peopelNum = 1;
+							
+							$("#main_0").append('<div id="bolls" style="margin-top:50px"></div>');
+							$("#bolls").append('<svg id="fillgaugeb1" width="25%" height="120" style="float: left;"></svg>');
+							$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+jsonStr.tank_size+'</span>');
+							$("#bolls").append('<svg id="fillgaugeb2" width="25%" height="120" style="float: left;"></svg>');
+							$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size + peopelNum*120)+'</span>');
+							$("#bolls").append('<svg id="fillgaugeb3" width="25%" height="120" style="float: left;"></svg>');
+							$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size*2)+'</span>');
+							
+							var configs = liquidFillGaugeDefaultSettings();
+						    configs.waveHeight = 0.3;
+						    configs.circleThickness = 0.1;
+						    configs.circleFillGap = 0.2;
+						    configs.textVertPosition = 0.8;
+						    configs.waveAnimateTime = 2000;
+						    configs.waveCount = 1;
+						    configs.displayPercent = false;
+						    configs.maxValue = jsonStr.tank_size;
+							var gauge11 = loadLiquidFillGauge("fillgaugeb1", 28, configs);
+							gauge11.update(jsonStr.tank_size);
+							
+							var configs1 = liquidFillGaugeDefaultSettings();
+							configs1.waveHeight = 0.3;
+							configs1.circleThickness = 0.1;
+							configs1.circleFillGap = 0.2;
+							configs1.textVertPosition = 0.8;
+							configs1.waveAnimateTime = 2000;
+							configs1.waveCount = 1;
+							configs1.displayPercent = false;
+							configs1.maxValue = jsonStr.tank_size + peopelNum*120;
+							var gauge22 = loadLiquidFillGauge("fillgaugeb2", 28, configs1);
+							gauge22.update(jsonStr.tank_size);
+							
+							var configs3 = liquidFillGaugeDefaultSettings();
+							configs3.waveHeight = 0.3;
+							configs3.circleThickness = 0.1;
+							configs3.circleFillGap = 0.2;
+							configs3.textVertPosition = 0.8;
+							configs3.waveAnimateTime = 2000;
+							configs3.waveCount = 1;
+							configs3.displayPercent = false;
+							configs3.maxValue = jsonStr.tank_size*2;
+							var gauge22 = loadLiquidFillGauge("fillgaugeb3", 28, configs3);
+							gauge22.update(jsonStr.tank_size);
+							changeMonth(0)
+						},
+						error: function (message) {
 						}
-					]
-				};
-				chart.setOption(options);
-				chart2.setOption(options2);
-			},
-			error: function (message) {
-				htmlContent = message;
-			}
+				});
+				},
+				error: function (message) {
+					htmlContent = message;
+				}
+			});
+		}
+		else
+		{
+			$.ajax({
+				type: "POST",
+				url: "http://localhost:8000/api/gettanksize",
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(gettanksize(id, y)),
+				dataType: "json",
+				//jsonpCallback: "jsonpcallback",
+				async: false,
+				success: function(data)
+				{
+					var peopelNum = $("#peopelNum").val();
+					if (peopelNum == '')
+						peopelNum = 1;
+					$("#mainText").append('<div id="main_01" style="height:450px;"></div>');
+					var jsonStr = data;
+					allTanks = data;
+					$("#main_01").append('<div id="bolls" style="margin-top:50px"></div>');
+					$("#bolls").append('<svg id="fillgaugeb1" width="25%" height="120" style="float: left;"></svg>');
+					$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+jsonStr.tank_size+'</span>');
+					$("#bolls").append('<svg id="fillgaugeb2" width="25%" height="120" style="float: left;"></svg>');
+					$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size + peopelNum*120)+'</span>');
+					$("#bolls").append('<svg id="fillgaugeb3" width="25%" height="120" style="float: left;"></svg>');
+					$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size*2)+'</span>');
+					
+					var configs = liquidFillGaugeDefaultSettings();
+				    configs.waveHeight = 0.3;
+				    configs.circleThickness = 0.1;
+				    configs.circleFillGap = 0.2;
+				    configs.textVertPosition = 0.8;
+				    configs.waveAnimateTime = 2000;
+				    configs.waveCount = 1;
+				    configs.displayPercent = false;
+				    configs.maxValue = jsonStr.tank_size;
+					var gauge11 = loadLiquidFillGauge("fillgaugeb1", 28, configs);
+					gauge11.update(jsonStr.tank_size);
+					
+					var configs1 = liquidFillGaugeDefaultSettings();
+					configs1.waveHeight = 0.3;
+					configs1.circleThickness = 0.1;
+					configs1.circleFillGap = 0.2;
+					configs1.textVertPosition = 0.8;
+					configs1.waveAnimateTime = 2000;
+					configs1.waveCount = 1;
+					configs1.displayPercent = false;
+					configs1.maxValue = jsonStr.tank_size + peopelNum*120;
+					var gauge22 = loadLiquidFillGauge("fillgaugeb2", 28, configs1);
+					gauge22.update(jsonStr.tank_size);
+					
+					var configs3 = liquidFillGaugeDefaultSettings();
+					configs3.waveHeight = 0.3;
+					configs3.circleThickness = 0.1;
+					configs3.circleFillGap = 0.2;
+					configs3.textVertPosition = 0.8;
+					configs3.waveAnimateTime = 2000;
+					configs3.waveCount = 1;
+					configs3.displayPercent = false;
+					configs3.maxValue = jsonStr.tank_size*2;
+					var gauge22 = loadLiquidFillGauge("fillgaugeb3", 28, configs3);
+					gauge22.update(jsonStr.tank_size);
+					changeMonth(0)
+				},
+				error: function (message) {
+				}
 		});
+		}
+		toMain();
+		cont++
+		return;
 	}
-	toMain();
-	if (countNum == 0)
-			alert("Warning: Please input valid suburb name");
 
 }
-function getJsonDate2(id)
+function changeMonth(number)
+{
+	gauge.update(allText[number].volume);
+	$("#volumeTag").html("overflow: " + allText[number].overflow);
+	$("#deficitTag").html("deficit: " + allText[number].deficit);
+	var tank = $("#waterLitre").val();
+	$("#inTge").append('<div id="overflowss" style="margin-left: 15px; color:red"></div>');
+	if (allText[number].overflow > 0)
+		$("#overflowss").html('overflow');
+	else
+		$("#overflowss").html('');
+}
+function gettanksize(id, val)
 {
 	var strr = ""+id;
+	var strrSub = ""+val
 	var roofArea = $("#area").val();
 	if (roofArea == '')
-		roofArea = "50";
+		roofArea = '50';
+	var peopelNum = $("#peopelNum").val();
+	if (peopelNum == '')
+		peopelNum = '1';
 	var json = {
-		"station_id": strr,
-		"roof_area" : roofArea
-	};
-	return json;
+			"code":strr,
+			"suburb":strrSub,
+			"roof_area" : roofArea,
+			"household_number": peopelNum
+		};
+		return json;
+}
+function getJsonDate2(id, val)
+{
+	var strr = ""+id;
+	var strrSub = ""+val
+	var roofArea = $("#area").val();
+	if (roofArea == '')
+		roofArea = '50';
+	var peopelNum = $("#peopelNum").val();
+	if (peopelNum == '')
+		peopelNum = '1';
+	var tank = $("#waterLitre").val();
+	if (tank == '')
+		tank = null;
+	if (tank != null)
+	{
+		var json = {
+				"code":strr,
+				"suburb":strrSub,
+				"roof_area" : roofArea,
+				"household_number": peopelNum,
+				"tank_capacity": tank
+			};
+			return json;
+	}
+	else
+	{
+		var json = {
+				"code":strr,
+				"suburb":strrSub,
+				"roof_area" : roofArea,
+				"household_number": peopelNum
+			};
+			return json;
+	}
+		
 }
 
 	function toMain()
@@ -401,7 +637,7 @@ function getJsonDate2(id)
 	$("#localization").blur(
 		function(){
 			var varText = $("#localization").val();
-			if(/^[A-Za-z]+$/.test(varText))
+			if(/^[A-Za-z ]+$/.test(varText))
 			{
 				$("#localization").css("background-color", "white");
 				$("#localization").removeClass("invalid");
