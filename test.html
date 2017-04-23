@@ -42,7 +42,7 @@
 								<input type="text" id="localization" class="form-control" placeholder="suburb name" onchange="">
 							</div>
 							<div class="input-group" style="float:left; width:100px; margin-left:10px">
-								<input type="text" id="postCode" class="form-control" placeholder="post code">
+								<input type="text" id="postCode" class="form-control" placeholder="post code" readonly="readonly">
 							</div>
 						</div>
 						<label style="margin-top: 5px;">Type in your tank capacity</label><br>
@@ -154,7 +154,10 @@ function attributeCount(obj) {
 }
 var allText;
 var allTanks;
-var gauge
+var gauge;
+var gauge11;
+var gauge22;
+var gauge33;
 function submitAPI()
 {
 	$("#localization").blur();
@@ -197,15 +200,20 @@ function submitAPI()
 		alert("Warning: Type in a valid number. If you do not know your roof area, click on 'Calculate the roof area now'");
 		return false;
 	}
-	if ($("#waterLitre").hasClass("invalid") || $("#area").hasClass("invalid") || $("#peopelNum").hasClass("invalid"))
+	if ($("#waterLitre").hasClass("invalid") || $("#area").hasClass("invalid"))
 	{
 		alert("Warning: Please input only numbers")
 		return false;	
 	}
+	if ($("#peopelNum").hasClass("invalid"))
+	{
+		alert("Warning : Please tell us how many people in your house. Max number is 15");
+		return false;
+	}
 	var tankvalue =$("#waterLitre").val();
 	
 	$("#mainText").html("");
-	$("#mainText").append('<a href="mailto:goodboy888666@gmail.com"><button type="button" class="btn btn-default btn-info" id="tomail" style="border-radius: 0px;float:right;margin-top: 25px;">FAQ</button></a>');
+	$("#mainText").append('<a href="Template-FAQ/index.html" target="_blank"><button type="button" class="btn btn-default btn-info" id="tomail" style="border-radius: 0px;float:right;margin-top: 25px;">FAQ</button></a>');
 	if(tankvalue != '')
 	{
 		$("#mainText").append('<button type="button" class="btn btn-default" id="toCost" onClick="toCost();" style="border-radius: 0px;float:right;margin-top: 25px;">Cost Analysis</button>');
@@ -294,7 +302,7 @@ function submitAPI()
 	                if (text[4] != null){
 	                	cost[4] = text[4].volume*2.3932/1000;
 	                    cost2[4] = text[4].volume*2.5993/1000;cost3[4] = text[4].volume*2.6097/1000;cost4[4]=text[4].volume*1.7058/1000;}
-	                if (text[5] != null){ 
+	                if (text[5] != null){
 	                	cost[5] = text[5].volume*2.3932/1000;
 	                    cost2[5] = text[5].volume*2.5993/1000;cost3[5] = text[5].volume*2.6097/1000;cost4[5]=text[5].volume*1.7058/1000;}
 	                if (text[6] != null){
@@ -322,11 +330,62 @@ function submitAPI()
 					$("#main_"+countNum).append('<svg id="fillgauge'+countNum+'" width="30%" height="150" style="float: left;"></svg>');
 					$("#main_"+countNum).append('<div id="inTge" style="float:left;border:1px solid blue;width:250px;height:150px"></div>');
 					$("#inTge").append('<div id="volumeTag" style="margin-top: 30px;margin-left: 15px;">overflow:</div><br>');
+                    $("#inTge").append('<div id="overflowss" style="margin-left: 15px; color:red"></div>');
+                    $("#inTge").append('<div id="fill" style="margin-left: 15px; color:red"></div>');
 					$("#inTge").append('<div id="deficitTag" style="margin-left: 15px;">deficit:</div>');
 					$("#main_"+countNum).append('<br><div id="buttonList" style="margin-top: 200px;margin-left: 40px;"></div>');
 					for (var is = 0; is < 12; is++)
 					{
-						$("#buttonList").append('<button class="btn btn-default btn-primary" type="button" style="margin-left: 10px;" onclick="changeMonth('+is+')">'+(is+1)+'</button>');
+					    var mon = "";
+					    if(is == 0)
+						{
+						    mon = "Jan"
+						}
+                        if(is == 1)
+                        {
+                            mon = "Feb"
+                        }
+                        if(is == 2)
+                        {
+                            mon = "Mar"
+                        }
+                        if(is == 3)
+                        {
+                            mon = "Apr"
+                        }
+                        if(is == 4)
+                        {
+                            mon = "May"
+                        }
+                        if(is == 5)
+                        {
+                            mon = "Jun"
+                        }
+                        if(is == 6)
+                        {
+                            mon = "Jul"
+                        }
+                        if(is == 7)
+                        {
+                            mon = "Aug"
+                        }
+                        if(is == 8)
+                        {
+                            mon = "Sep"
+                        }
+                        if(is == 9)
+                        {
+                            mon = "Oct"
+                        }
+                        if(is == 10)
+                        {
+                            mon = "Nov"
+                        }
+                        if(is == 11)
+                        {
+                            mon = "Dec"
+                        }
+						$("#buttonList").append('<button class="btn btn-default btn-primary" type="button" style="margin-left: 10px; font-size: 10px" onclick="changeMonth('+is+')">'+ mon +'</button>');
 					}
 					var config = liquidFillGaugeDefaultSettings();
 				    config.waveHeight = 0.3;
@@ -339,7 +398,7 @@ function submitAPI()
 				    config.maxValue = tanklat;
 					gauge = loadLiquidFillGauge("fillgauge" + countNum, 28, config);
 					gauge.update(text[0].volume);
-					
+
 					countNum++;
 					//op2
 					var options2 = {
@@ -388,7 +447,7 @@ function submitAPI()
 						]
 					};
 					chart2.setOption(options2);
-					
+					countNum++;
 					//op3
 					$.ajax({
 						type: "POST",
@@ -402,19 +461,73 @@ function submitAPI()
 						{
 							var jsonStr = data;
 							allTanks = data;
-							
+
 							var peopelNum = $("#peopelNum").val();
 							if (peopelNum == '')
 								peopelNum = 1;
-							
+
 							$("#main_0").append('<div id="bolls" style="margin-top:50px"></div>');
 							$("#bolls").append('<svg id="fillgaugeb1" width="25%" height="120" style="float: left;"></svg>');
 							$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+jsonStr.tank_size+'</span>');
 							$("#bolls").append('<svg id="fillgaugeb2" width="25%" height="120" style="float: left;"></svg>');
 							$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size + peopelNum*120)+'</span>');
 							$("#bolls").append('<svg id="fillgaugeb3" width="25%" height="120" style="float: left;"></svg>');
-							$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size*2)+'</span>');
-							
+							$("#bolls").append('<span id="finaTankSize" style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size*2)+'</span>');
+                            $("#bolls").append('<br><div id="buttonList2" style="margin-top: 120px;margin-left: 40px;"></div>');
+                            for (var is = 0; is < 12; is++)
+                            {
+                                var mon = "";
+                                if(is == 0)
+                                {
+                                    mon = "Jan"
+                                }
+                                if(is == 1)
+                                {
+                                    mon = "Feb"
+                                }
+                                if(is == 2)
+                                {
+                                    mon = "Mar"
+                                }
+                                if(is == 3)
+                                {
+                                    mon = "Apr"
+                                }
+                                if(is == 4)
+                                {
+                                    mon = "May"
+                                }
+                                if(is == 5)
+                                {
+                                    mon = "Jun"
+                                }
+                                if(is == 6)
+                                {
+                                    mon = "Jul"
+                                }
+                                if(is == 7)
+                                {
+                                    mon = "Aug"
+                                }
+                                if(is == 8)
+                                {
+                                    mon = "Sep"
+                                }
+                                if(is == 9)
+                                {
+                                    mon = "Oct"
+                                }
+                                if(is == 10)
+                                {
+                                    mon = "Nov"
+                                }
+                                if(is == 11)
+                                {
+                                    mon = "Dec"
+                                }
+                                $("#buttonList2").append('<button class="btn btn-default btn-primary" type="button" style="margin-left: 10px; font-size: 10px" onclick="changeTankMonth('+is+')">'+ mon +'</button>');
+                            }
+
 							var configs = liquidFillGaugeDefaultSettings();
 						    configs.waveHeight = 0.3;
 						    configs.circleThickness = 0.1;
@@ -424,9 +537,9 @@ function submitAPI()
 						    configs.waveCount = 1;
 						    configs.displayPercent = false;
 						    configs.maxValue = jsonStr.tank_size;
-							var gauge11 = loadLiquidFillGauge("fillgaugeb1", 28, configs);
-							gauge11.update(jsonStr.tank_size);
-							
+							gauge11 = loadLiquidFillGauge("fillgaugeb1", 28, configs);
+							gauge11.update(text[0].volume);
+
 							var configs1 = liquidFillGaugeDefaultSettings();
 							configs1.waveHeight = 0.3;
 							configs1.circleThickness = 0.1;
@@ -436,9 +549,9 @@ function submitAPI()
 							configs1.waveCount = 1;
 							configs1.displayPercent = false;
 							configs1.maxValue = jsonStr.tank_size + peopelNum*120;
-							var gauge22 = loadLiquidFillGauge("fillgaugeb2", 28, configs1);
-							gauge22.update(jsonStr.tank_size);
-							
+							gauge22 = loadLiquidFillGauge("fillgaugeb2", 28, configs1);
+							gauge22.update(text[0].volume);
+
 							var configs3 = liquidFillGaugeDefaultSettings();
 							configs3.waveHeight = 0.3;
 							configs3.circleThickness = 0.1;
@@ -447,9 +560,9 @@ function submitAPI()
 							configs3.waveAnimateTime = 2000;
 							configs3.waveCount = 1;
 							configs3.displayPercent = false;
-							configs3.maxValue = jsonStr.tank_size*2;
-							var gauge22 = loadLiquidFillGauge("fillgaugeb3", 28, configs3);
-							gauge22.update(jsonStr.tank_size);
+							configs3.maxValue = jsonStr.tank_size + allText[2].volume;
+							gauge33 = loadLiquidFillGauge("fillgaugeb3", 28, configs3);
+							gauge33.update(text[0].volume);
 							changeMonth(0)
 						},
 						error: function (message) {
@@ -485,8 +598,61 @@ function submitAPI()
 					$("#bolls").append('<svg id="fillgaugeb2" width="25%" height="120" style="float: left;"></svg>');
 					$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size + peopelNum*120)+'</span>');
 					$("#bolls").append('<svg id="fillgaugeb3" width="25%" height="120" style="float: left;"></svg>');
-					$("#bolls").append('<span style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size*2)+'</span>');
-					
+					$("#bolls").append('<span id="finaTankSize" style="float: left;margin-left:-30px">tank size:<br>'+(jsonStr.tank_size*2)+'</span>');
+					$("#bolls").append('<br><div id="buttonList2" style="margin-top: 120px;margin-left: 40px;"></div>');
+                    for (var is = 0; is < 12; is++)
+                    {
+                        var mon = "";
+                        if(is == 0)
+                        {
+                            mon = "Jan"
+                        }
+                        if(is == 1)
+                        {
+                            mon = "Feb"
+                        }
+                        if(is == 2)
+                        {
+                            mon = "Mar"
+                        }
+                        if(is == 3)
+                        {
+                            mon = "Apr"
+                        }
+                        if(is == 4)
+                        {
+                            mon = "May"
+                        }
+                        if(is == 5)
+                        {
+                            mon = "Jun"
+                        }
+                        if(is == 6)
+                        {
+                            mon = "Jul"
+                        }
+                        if(is == 7)
+                        {
+                            mon = "Aug"
+                        }
+                        if(is == 8)
+                        {
+                            mon = "Sep"
+                        }
+                        if(is == 9)
+                        {
+                            mon = "Oct"
+                        }
+                        if(is == 10)
+                        {
+                            mon = "Nov"
+                        }
+                        if(is == 11)
+                        {
+                            mon = "Dec"
+                        }
+                        $("#buttonList2").append('<button class="btn btn-default btn-primary" type="button" style="margin-left: 10px; font-size: 10px" onclick="changeTankMonth('+is+')">'+ mon +'</button>');
+                    }
 					var configs = liquidFillGaugeDefaultSettings();
 				    configs.waveHeight = 0.3;
 				    configs.circleThickness = 0.1;
@@ -496,7 +662,7 @@ function submitAPI()
 				    configs.waveCount = 1;
 				    configs.displayPercent = false;
 				    configs.maxValue = jsonStr.tank_size;
-					var gauge11 = loadLiquidFillGauge("fillgaugeb1", 28, configs);
+					gauge11 = loadLiquidFillGauge("fillgaugeb1", 28, configs);
 					gauge11.update(jsonStr.tank_size);
 					
 					var configs1 = liquidFillGaugeDefaultSettings();
@@ -508,7 +674,7 @@ function submitAPI()
 					configs1.waveCount = 1;
 					configs1.displayPercent = false;
 					configs1.maxValue = jsonStr.tank_size + peopelNum*120;
-					var gauge22 = loadLiquidFillGauge("fillgaugeb2", 28, configs1);
+					gauge22 = loadLiquidFillGauge("fillgaugeb2", 28, configs1);
 					gauge22.update(jsonStr.tank_size);
 					
 					var configs3 = liquidFillGaugeDefaultSettings();
@@ -520,14 +686,32 @@ function submitAPI()
 					configs3.waveCount = 1;
 					configs3.displayPercent = false;
 					configs3.maxValue = jsonStr.tank_size*2;
-					var gauge22 = loadLiquidFillGauge("fillgaugeb3", 28, configs3);
-					gauge22.update(jsonStr.tank_size);
-					changeMonth(0)
+					gauge33 = loadLiquidFillGauge("fillgaugeb3", 28, configs3);
+					gauge33.update(jsonStr.tank_size);
+					
+					$.ajax({
+						type: "POST",
+						url: "http://localhost:8000/api/getwaterlevels",
+						contentType: "application/json; charset=utf-8",
+						data: JSON.stringify(gettanksize2(id, y, jsonStr.tank_size)),
+						dataType: "json",
+						//jsonpCallback: "jsonpcallback",
+						async: false,
+						success: function(data)
+						{
+							var text = data;
+							allText = data;
+							changeTankMonth(0);
+						},
+						error: function (message) {
+						}
+				});
 				},
 				error: function (message) {
 				}
 		});
 		}
+
 		toMain();
 		cont++
 		return;
@@ -535,17 +719,42 @@ function submitAPI()
 
 }
 function changeMonth(number)
-{
-	gauge.update(allText[number].volume);
-	$("#volumeTag").html("overflow: " + allText[number].overflow);
-	$("#deficitTag").html("deficit: " + allText[number].deficit);
-	var tank = $("#waterLitre").val();
-	$("#inTge").append('<div id="overflowss" style="margin-left: 15px; color:red"></div>');
-	if (allText[number].overflow > 0)
-		$("#overflowss").html('overflow');
-	else
-		$("#overflowss").html('');
-}
+    {
+        gauge.update(allText[number].volume);
+        $("#volumeTag").html("overflow: " + allText[number].overflow);
+
+        $("#deficitTag").html("deficit: " + allText[number].deficit);
+        var tank = $("#waterLitre").val();
+
+        if (allText[number].overflow > 0)
+            $("#overflowss").html('Warning ! Your tank is overflow !!!');
+        else
+            $("#overflowss").html('');
+    }
+
+    function changeTankMonth(number)
+    {
+        gauge11.update(allText[number].volume);
+        gauge22.update(allText[number].volume);
+        var configs = liquidFillGaugeDefaultSettings();
+        configs.waveHeight = 0.3;
+		configs.circleThickness = 0.1;
+		configs.circleFillGap = 0.2;
+		configs.textVertPosition = 0.8;
+		configs.waveAnimateTime = 2000;
+		configs.waveCount = 1;
+		configs.displayPercent = false;
+		var maxsize
+		if (number == 11)
+			maxsize = allText[0].volume + allTanks.tank_size;
+		else
+			maxsize = allText[number + 1].volume + allTanks.tank_size;
+		configs.maxValue = maxsize;
+		var gauge44 = loadLiquidFillGauge("fillgaugeb3", 28, configs);
+		gauge44.update(allText[number].volume);
+		$("#finaTankSize").html('tank size:<br>'+maxsize);
+    }
+
 function gettanksize(id, val)
 {
 	var strr = ""+id;
@@ -561,6 +770,25 @@ function gettanksize(id, val)
 			"suburb":strrSub,
 			"roof_area" : roofArea,
 			"household_number": peopelNum
+		};
+		return json;
+}
+function gettanksize2(id, val, tanksize)
+{
+	var strr = ""+id;
+	var strrSub = ""+val
+	var roofArea = $("#area").val();
+	if (roofArea == '')
+		roofArea = '50';
+	var peopelNum = $("#peopelNum").val();
+	if (peopelNum == '')
+		peopelNum = '1';
+	var json = {
+			"code":strr,
+			"suburb":strrSub,
+			"roof_area" : roofArea,
+			"household_number": peopelNum,
+			"tank_capacity": tanksize
 		};
 		return json;
 }
@@ -665,10 +893,18 @@ function getJsonDate2(id, val)
 	$("#peopelNum").blur(
 			function(){
 				var varText = $("#peopelNum").val();
-				if(/^[0-9]*$/.test(varText))
+				if(/^[0-9]+$/.test(varText))
 				{
-					$("#peopelNum").css("background-color", "white");
-					$("#peopelNum").removeClass("invalid");
+					if (varText > 15 || varText < 1)
+					{
+						$("#peopelNum").css("background-color", "#FFE1E1");
+						$("#peopelNum").addClass("invalid");
+					}
+					else
+					{
+						$("#peopelNum").css("background-color", "white");
+						$("#peopelNum").removeClass("invalid");
+					}
 				}
 				else
 				{
